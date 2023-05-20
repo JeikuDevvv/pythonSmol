@@ -1,8 +1,13 @@
 import requests
 
+wordLength = 3
+
 def main():
     print("\n[ Welcome to Python Worlde by Jeiku Dev ]\n")
     
+    while True:
+        return print('huhu')
+
     
     
 def getSecretWord(wordLength):
