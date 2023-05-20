@@ -1,50 +1,54 @@
 import requests
 
 wordLength = 3 # Minimum Value
-maxGuesses = 5 
+maxGuesses = 5
 
 def main():
     print("\n\t\t[ Welcome to Python Worlde by Jeiku Dev ]\n")
     
     modeSelect = int(input("\tSelect Mode:\n\t[1] Easy (3 Letters) \n\t[2] Intermediate (5 Lettters) \n\t[3] Hard (7 Letters) \n\t[4] Custom \n\t-> "))
     if modeSelect == 1:
-        easyModeValue = 3
-        secretWord = getSecretWord(easyModeValue)
-        strFormSecretWord = "".join(ch for ch in secretWord if ch.isalnum())
-            
+        modeValue = 3
+        secretWord = getSecretWord(modeValue)
+        
     elif modeSelect == 2:
-        easyModeValue = 5
-        print(getSecretWord(easyModeValue))
+        modeValue = 5
+        print(getSecretWord(modeValue))
             
     elif modeSelect == 3:
-        easyModeValue = 7
-        print(getSecretWord(easyModeValue))
+        modeValue = 7
+        print(getSecretWord(modeValue))
             
     elif modeSelect == 4:
             print('custom')
     while True:
-        print('\nI have thought up a Word.\n'
-            + 'You have {} guesses to get it.'.format(maxGuesses))
-        
-        wordGuess = 1
-        while wordGuess != maxGuesses:
-            guess = input('\nGuess {}: '.format(wordGuess))
-                        
-            clues = getClues(guess, strFormSecretWord)
-            print('Clue: ' + clues)
-            wordGuess += 1
-                        
+        strFormSecretWord = "".join(ch for ch in secretWord if ch.isalnum())
+        print('\n\tI have thought up a Word.\n\t'
+            + 'You have {} guesses to get it.'.format(modeValue))
+            
+        wordGuesses = 1
+        while wordGuesses <= maxGuesses:
+            guess = ''
+            while len(guess) != modeValue or not guess.isdecimal():
+                guess = input("\n\tGuess #{} ".format(wordGuesses))
+            
+                clues = getClues(guess, strFormSecretWord)
+                print("\tClues: {}".format(clues))
+                wordGuesses += 1
+            wordGuesses += 1
+            
             if guess == strFormSecretWord:
                 break
-            if wordGuess > maxGuesses:
-                print('\nYou ran our of guesses\n'
-                    + 'The Answer was {}.'.format(strFormSecretWord))
-
-        if not input('\nDo you want to play again? (y/n/r): ').lower().startswith('y'):
+            if wordGuesses > modeValue:
+                print("\n\tYou run out of guesses! The Answer was {} ".format(strFormSecretWord))
+        
+        response = input("\n\tDo you wanna play Again? (y/n/r) : ").lower()
+        if response == 'n':
             break
-    print('\nThanks for Playing <3.\n')
-
-
+        if response == 'r':
+            main()
+    
+    print("\n\tTHANK YOU FOR PLAYING!!!")
 
 def getSecretWord(wordLength):
     response = requests.get('https://random-word-api.vercel.app/api?length={}'.format(wordLength))
@@ -56,16 +60,16 @@ def getSecretWord(wordLength):
 
 def getClues(guess, strFormSecretWord):
     if guess == strFormSecretWord:
-        return 'You got it!!'
+        return '\n\tYou got it!!'
 
     clues = []
 
     for i in range(len(guess)):
         if guess[i] == strFormSecretWord[i]:
-            clues.append('Fermi')
+            clues.append('Letter Found in place!')
         elif guess[i] in strFormSecretWord[i]:
-            clues.append('Pico')
-
+            clues.append('Letter Found!')
+            
     if len(clues) == 0:
         return 'Bagels'
     else:
